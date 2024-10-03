@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image, StyleSheet, TextInput } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Audio } from 'expo-av';
-import { doc, onSnapshot, updateDoc, arrayUnion,deleteDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, arrayUnion,deleteDoc,collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { auth, db  } from "../../firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BackHandler, Alert } from 'react-native';
@@ -52,7 +52,34 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
     }, [])
   );
   
+  const updateTriDuration = async (duration) => {
+    try {
+      const currentUserEmail = auth.currentUser?.email;
+      if (!currentUserEmail) {
+        throw new Error('No authenticated user found');
+      }
   
+      const userDocRef = doc(db, 'Users', currentUserEmail);
+  
+      const userDoc = await getDoc(userDocRef);
+      if (!userDoc.exists()) {
+        console.log('No user found with this email');
+        return;
+      }
+  
+      const userData = userDoc.data();
+  
+      const currentTri = userData.tri || 0;
+  
+      await updateDoc(userDocRef, {
+        tri: currentTri + duration,
+      });
+  
+      console.log(`Updated user: ${currentUserEmail} with new tri value: ${currentTri + duration}`);
+    } catch (error) {
+      console.error('Error updating user tri:', error);
+    }
+  };
 
 
   useEffect(() => {
@@ -63,6 +90,9 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
     };
 
     fetchUserType();
+    updateTriDuration(durationInMinutes);
+
+    
   }, []);
 
 

@@ -79,6 +79,7 @@ export default class Sign_up extends Component {
             Alert.alert('Error adding user details', error.message);
             console.error(error);
           });
+        updateDoc(usersCollection,{tri:0})
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {

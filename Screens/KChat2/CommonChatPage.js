@@ -62,6 +62,45 @@ const CommonChatPage = ({ route, navigation }) => {
     return () => unsubscribe();
   }, [chatRoomId, meditatorEmails]);
 
+  useEffect(()=>{
+    const chatRoomRef = doc(db, 'ChatRooms', chatRoomId);
+    const unsubscribe = onSnapshot(chatRoomRef, (docSnapshot) => {
+      const data = docSnapshot.data();
+
+      if (data) {
+        
+
+        const selectedSong = data.song || null;
+        const duration = data.duration || null;
+        const status = data.status || "pending";
+
+        const meditatorEmails = data.meditatorEmails || [];
+        let flag = true;
+        meditatorEmails.forEach((email) => {
+          const trimmedEmail = email.split('.com')[0];
+          flag = flag && (data[trimmedEmail]?.com === true);
+        });
+
+        if (selectedSong && duration && status === "active" /*&& auth.currentuser.email*/) {
+          navigation.navigate('MeditationTimerAndChat', {
+            chatRoomId: docSnapshot.id,
+            selectedSong,
+            duration,
+          });
+        }
+
+        
+
+        setIsMeditationStartEnabled(flag);
+      } else {
+        // If no chat room data, show no messages
+        setMessages([]);
+      }
+    });
+
+    return () => unsubscribe();
+  },[])
+
   const sendMessage = async () => {
     if (!message) return;
 

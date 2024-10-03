@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, View, Text, Alert } from 'react-native';
+import { Button, View, Text, Alert, StyleSheet } from 'react-native';
 import { sendChatRequest } from '../sendChatRequest';
 import { doc, onSnapshot, updateDoc ,serverTimestamp} from 'firebase/firestore';
 import { auth, db } from "../../../firebase";
@@ -23,10 +23,9 @@ export default function MeditatorPage({ navigation }) {
       else{
         //TODO : navigate , write snapshot to navigate to the lobby , or will the sanpshot from other component work? , need to check
         setChatRoomId(roomId)
-        const chatRequestRef = doc(db, 'chatRequests', roomId); // Use roomId directly as the document ID
+        const chatRequestRef = doc(db, 'chatRequests', roomId);
 
         await updateDoc(chatRequestRef, {
-          // chatRequestId: roomId,
           meditatorEmail:auth.currentUser.email,
           status: 'pending',
           timestamp: serverTimestamp(),
@@ -40,7 +39,7 @@ export default function MeditatorPage({ navigation }) {
   };
 
   useEffect(() => {
-    if (chatRequestId) {
+    // if (chatRequestId) {
       console.log("use effect called")
       const chatRequestRef = doc(db, 'chatRequests', chatRequestId);
 
@@ -53,7 +52,7 @@ export default function MeditatorPage({ navigation }) {
       });
 
       return () => unsubscribe();
-    }
+    // }
   }, [chatRequestId]);
 
   useEffect(() => {
@@ -68,15 +67,9 @@ export default function MeditatorPage({ navigation }) {
     
     const unsubscribe = onSnapshot(chatRoomRef, (snapshot) => {
       console.log("ChatRooms updated");
-      
-      // if (!snapshot.exists()) {
-      //   console.error("Chat room does not exist");
-      //   return;
-      // }
-  
+
       const chatRoomData = snapshot.data();
       if (chatRoomData?.status === 'created'  && chatRoomData?.meditatorEmails.includes(auth.currentUser.email)) {
-        // navigation.navigate('MeditatorLobby' , {chatRoomId});
         navigation.navigate('CommonChatPage' , {chatRoomId: chatRequestId});
         setLoading(false);
       } else {
@@ -88,10 +81,10 @@ export default function MeditatorPage({ navigation }) {
   };
 
   return (
-    <View>
-      <Text>Meditator Page</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Meditator Page</Text>
       {loading ? (
-        <Text>Looking for an instructor...</Text>
+        <Text style={styles.loadingText}>Looking for an instructor...</Text>
       ) : (
         <Button title="Find Instructor and Start" onPress={handleChatRequest} />
       )}
@@ -100,25 +93,23 @@ export default function MeditatorPage({ navigation }) {
 }
 
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: 'gray',
+  },
+});
 
 
 
 
-
-
-// import React, { useEffect } from 'react';
-// import { Button, View, Text, Alert } from 'react-native';
-// // import { findAvailableInstructor, requestChatRoom, listenForInstructorResponse } from '../services/ChatService';
-// import { findAvailableInstructor, requestChatRoom, listenForInstructorResponse } from "../../KChat/Services/ChatService"
-// import { sendChatRequest } from '../sendChatRequest';
-// import {auth,db} from "../../../firebase"
-
-// export default function MeditatorPage({ navigation }) {
-  
-//   return (
-//     <View>
-//       <Text>Meditator Page</Text>
-//       <Button title="Find Instructor and Start" onPress={()=>{sendChatRequest()}} />
-//     </View>
-//   );
-// }

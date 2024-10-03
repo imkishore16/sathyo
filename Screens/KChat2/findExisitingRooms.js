@@ -10,6 +10,7 @@ export async function findExisitingRooms() {
     collection(db, 'ChatRooms'),
     where('status', '==', 'created'),
     // where('')
+    where('meditatorsCount', '<', 2)
   );
 
   const existingChatRoomsSnapshot = await getDocs(existingChatRoomQuery);
@@ -17,11 +18,6 @@ export async function findExisitingRooms() {
   if (!existingChatRoomsSnapshot.empty) {
     const chatRoomDoc = existingChatRoomsSnapshot.docs[0];
     const chatRoomRequestRef = doc(db, 'ChatRooms', chatRoomDoc.id);
-
-    // await updateDoc(chatRoomRequestRef, {
-    //   meditatorEmails: arrayUnion(meditatorEmail), 
-      
-    // });
 
     console.log('Existing chat room found and updated:', chatRoomDoc.id);
     return chatRoomDoc.id;  

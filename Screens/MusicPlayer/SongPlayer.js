@@ -20,7 +20,6 @@ const SongPlayer = () => {
       sound.unloadAsync();
     }
     : undefined;
-    console.log("4")
   }, []);
 
   const setupAudio = async () => {

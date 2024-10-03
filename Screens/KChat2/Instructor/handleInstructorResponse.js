@@ -28,6 +28,7 @@ export async function handleInstructorResponse(chatRequestId, accepted,navigatio
       if (!existingData.meditatorEmails.includes(meditatorEmail)) {
         await updateDoc(chatRoomRef, {
           meditatorEmails: [...existingData.meditatorEmails, meditatorEmail],
+          meditatorsCount: currentMeditators.length + 1
         });
         console.log('Added meditatorEmail to existing chat room:', meditatorEmail);
       } else {
@@ -39,6 +40,7 @@ export async function handleInstructorResponse(chatRequestId, accepted,navigatio
         meditatorEmails: [meditatorEmail],
         status: 'created',
         instructorMessages: [],
+        meditatorsCount: 1
       });
       console.log('Chat room created for:', instructorEmail, meditatorEmail);
     }

@@ -2,9 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ChatProvider } from './Screens/KChat2/ChatContext'; // Ensure this path is correct
+import { ChatProvider } from './Screens/KChat2/ChatContext'; 
 import AppStack from './Screens/Router/AppStack';
 import NotificationListener from './Screens/KChat2/NotificationListener';
+import Toast from 'react-native-toast-message';
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -12,6 +14,7 @@ export default function App() {
           <AppStack/>
           <NotificationListener /> 
         </ChatProvider>
+        <Toast />
     </NavigationContainer>
   );
 }

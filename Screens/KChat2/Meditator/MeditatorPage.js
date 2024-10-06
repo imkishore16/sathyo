@@ -4,6 +4,8 @@ import { sendChatRequest } from '../sendChatRequest';
 import { doc, onSnapshot, updateDoc ,serverTimestamp} from 'firebase/firestore';
 import { auth, db } from "../../../firebase";
 import { findExisitingRooms } from '../findExisitingRooms';
+
+
 export default function MeditatorPage({ navigation }) {
   const [chatRequestId, setChatRequestId] = useState(null);
   const [chatRoomId, setChatRoomId] = useState(null);
@@ -55,11 +57,11 @@ export default function MeditatorPage({ navigation }) {
     // }
   }, [chatRequestId]);
 
-  useEffect(() => {
-    if (chatRoomId) {
-      listenForChatRoomCreation(chatRoomId);
-    }
-  }, [chatRoomId]);
+  // useEffect(() => {
+  //   if (chatRoomId) {
+  //     listenForChatRoomCreation(chatRoomId);
+  //   }
+  // }, [chatRoomId]);
 
   const listenForChatRoomCreation = (chatRequestId) => {
     console.log("listenForChatRoomCreation called")

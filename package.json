@@ -48,6 +48,7 @@
     "react-native-svg": "15.2.0",
     "react-native-swiper": "^1.6.0",
     "react-native-swiper-animated": "^1.5.3",
+    "react-native-toast-message": "^2.2.1",
     "react-native-webview": "13.8.6",
     "react-navigation": "^5.0.0",
     "uuid": "^10.0.0"

@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { View, Text, Image, SafeAreaView, ScrollView, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import ImageSlideshow from '../../Components/ImageSlideshow';
 import { getFirestore, getDocs, collection } from 'firebase/firestore';
+import { Alert } from 'react-native';
+import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default class MeditationPage extends Component {
   constructor(props) {
@@ -9,20 +13,25 @@ export default class MeditationPage extends Component {
     this.state = {
       modalVisible: false,
       durationModalVisible: false,
+      isMeditationTime:false,
       feeds: [],
       users: [],
       modalUri: '',
       dhyanamTitles: [],
       filteredTitles: [], // New state to hold filtered titles
+      userType:null,
     };
     this.intervalId = null;
   }
 
   async componentDidMount() {
     this.fetchFeeds();
+    this.fetchUserType();
     this._focusListener = this.props.navigation.addListener('focus', () => {
       this.setState({ modalVisible: false, durationModalVisible: false });
     });
+    this.checkMeditationTime();
+    
   }
 
   componentWillUnmount() {
@@ -33,7 +42,17 @@ export default class MeditationPage extends Component {
       clearInterval(this.intervalId);
     }
   }
-
+  
+  fetchUserType = async () => {
+    try {
+      const type = await AsyncStorage.getItem('userType');
+      this.setState({userType:type})
+      
+  } catch (error) {
+      console.error('Error retrieving userType:', error);
+      return null;
+  }
+  };
   fetchFeeds = async () => {
     try {
       const db = getFirestore();
@@ -72,6 +91,10 @@ export default class MeditationPage extends Component {
     this.setState({ durationModalVisible: visible });
   };
 
+  setIsMeditationTime = (visible) => {
+    this.setState({ isMeditationTime: visible });
+  };
+
   handleOptionSelect = (option) => {
     if (option === 'Dhiyanam') {
       this.setDurationModalVisible(true);
@@ -88,6 +111,13 @@ export default class MeditationPage extends Component {
     this.setModalVisible(true);
     this.setDurationModalVisible(false);
   };
+
+  checkMeditationTime = () => {
+  this.intervalId = setInterval(() => {
+      const currentHour = new Date().getHours();
+      this.setIsMeditationTime((currentHour >= 6 && currentHour < 9) || (currentHour >= 18 && currentHour < 21));
+  }, 60000); // Check every minute
+};
 
   render() {
     const { modalVisible, durationModalVisible, feeds, filteredTitles } = this.state;
@@ -111,6 +141,8 @@ export default class MeditationPage extends Component {
           </View>
 
           <View style={styles.meditationOptions}>
+
+
             <TouchableOpacity
               style={styles.meditationCard}
               onPress={() => this.handleOptionSelect('Dhiyanam')}
@@ -121,10 +153,45 @@ export default class MeditationPage extends Component {
 
             <TouchableOpacity
               style={styles.meditationCard}
-              onPress={() => this.props.navigation.navigate('MeditatorPage')}
+              // onPress={() => this.isMeditationTime ? this.props.navigation.navigate('MeditatorPage') : Alert.alert('Not Available', 'Meditation is only available from 6-9 AM and 6-9 PM.')}
+              onPress={() => {
+                if (this.state.isMeditationTime) {
+                  this.props.navigation.navigate(this.state.userType==="Meditator"?'MeditatorPage':'InstructorLobby');
+                } else {
+                  Toast.show({
+                    type: 'info', 
+                    text1: 'Not Available',
+                    text2: 'Only available from 6-9 AM and 6-9 PM.',
+                    position: 'bottom', 
+                    visibilityTime: 5000,
+                    style: {
+                      padding: 20,
+                      backgroundColor: '#000',
+                      borderRadius: 40,
+                      width: '80%', 
+                      maxWidth: 350,
+                    },
+                    text1Style: {
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    },
+                    text2Style: {
+                      fontSize: 16,
+                    },
+                  });
+                }
+              }}
             >
               <Image source={{ uri: 'https://srivedamaayu.com/wp-content/uploads/2016/11/meditation.jpg' }} style={styles.cardImage} />
-              <Text style={styles.meditationCardText}>MeditatorPage</Text>
+              <Text style={styles.meditationCardText}>MeditatorPage/Triyadhyanam</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.meditationCard}
+              onPress={() =>  this.props.navigation.navigate('MeditatorPage') }
+            >
+              <Image source={{ uri: 'https://srivedamaayu.com/wp-content/uploads/2016/11/meditation.jpg' }} style={styles.cardImage} />
+              <Text style={styles.meditationCardText}>MeditatorPage/Triyadhyanam</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -211,7 +278,6 @@ export default class MeditationPage extends Component {
     );
   }
 } 
-
 const styles = StyleSheet.create({
   safearea: {
     flex: 1,
@@ -230,93 +296,84 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   headerView: {
-    marginBottom: 10,
     flexDirection: 'row',
+    alignItems: 'center', // Center align items vertically
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-    voiceSection: {
-      marginBottom: 20,
-    },
-    headerView: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginBottom: 10,
-    },
-    headerText: {
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    meditationOptions: {
-      flexDirection: 'column',
-      justifyContent: 'space-around',
-    },
-    meditationCard: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#fff', // Cleaner background
-      borderRadius: 12, // More rounded corners
-      padding: 20, // Increased padding for spacing
-      marginBottom: 15,
-      shadowColor: '#000', // Adding shadow for depth
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-      elevation: 5, // Elevation for Android shadow
-    },
-    cardImage: {
-      width: 60, // Slightly larger image
-      height: 60,
-      marginRight: 20, // Spacing between image and text
-      borderRadius: 8, // Slightly more rounded image corners
-    },
-    meditationCardText: {
-      fontSize: 18, // Increased font size for better readability
-      fontWeight: '700', // Bolder text
-      color: '#333', // Darker color for contrast
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalView: {
-      width: 300,
-      backgroundColor: 'white',
-      borderRadius: 10,
-      padding: 20,
-      alignItems: 'center',
-    },
-    modalTitle: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 15,
-    },
-    modalOption: {
-      width: '100%',
-      padding: 10,
-      backgroundColor: '#e0e0e0',
-      borderRadius: 5,
-      marginVertical: 5,
-      alignItems: 'center',
-    },
-    modalOptionText: {
-      fontSize: 16,
-    },
-    closeButton: {
-      marginTop: 20,
-      padding: 10,
-      backgroundColor: '#ff5c5c',
-      borderRadius: 5,
-    },
-    closeButtonText: {
-      color: 'white',
-      fontSize: 16,
-    },
-  
+  voiceSection: {
+    marginBottom: 20,
+  },
+  meditationOptions: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+  meditationCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff', // Cleaner background
+    borderRadius: 12, // More rounded corners
+    padding: 20, // Increased padding for spacing
+    marginBottom: 15,
+    shadowColor: '#000', // Adding shadow for depth
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5, // Elevation for Android shadow
+  },
+  cardImage: {
+    width: 60, // Slightly larger image
+    height: 60,
+    marginRight: 20, // Spacing between image and text
+    borderRadius: 8, // Slightly more rounded image corners
+  },
+  meditationCardText: {
+    fontSize: 18, // Increased font size for better readability
+    fontWeight: '700', // Bolder text
+    color: '#333', // Darker color for contrast
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark overlay
+  },
+  modalView: {
+    width: 300,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalOption: {
+    width: '100%',
+    padding: 10,
+    backgroundColor: '#e0e0e0', // Light gray background for options
+    borderRadius: 5,
+    marginVertical: 5,
+    alignItems: 'center',
+  },
+  modalOptionText: {
+    fontSize: 16,
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#ff5c5c', // Red background for close button
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white', // White text color for contrast
+    fontSize: 16,
+  },
 });

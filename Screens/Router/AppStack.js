@@ -16,13 +16,11 @@ import Profile from "../../Screens/Profile/Profile_page"
 import MeditatorPage from "../KChat2/Meditator/MeditatorPage";
 import InstructorScreen from "../KChat2/Instructor/InstructorScreen";
 import InstructorLobby from "../KChat2/Instructor/InstructorLobby";
-import MeditatorLobby from "../KChat2/Meditator/MeditatorLobby";
 import MeditationTimerAndChat from "../KChat2/MeditationTimerAndChat";
 import SongPlayer from "../MusicPlayer/SongPlayer";
 import CommonChatPage from "../KChat2/CommonChatPage";
 import UploadMp3 from "../Upload/UploadMp3";
 import DeleteOldChatRequests from "../Utils/DeleteOldChatRequests";
-
 const Stack = createStackNavigator();
 
 export default function AppStack() {
@@ -138,14 +136,7 @@ export default function AppStack() {
                 }}
                 component={InstructorLobby}
             />
-            <Stack.Screen
-                name="MeditatorLobby"
-                options={{
-                    headerTitle: '', 
-                    header: (props) => <AppHeader {...props} /> 
-                }}
-                component={MeditatorLobby}
-            />
+            
             <Stack.Screen
                 name="MeditationTimerAndChat"
                 options={{
@@ -187,6 +178,7 @@ export default function AppStack() {
                 }}
                 component={DeleteOldChatRequests}
             />
+            
             
         </Stack.Navigator>
     );

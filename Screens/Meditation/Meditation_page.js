@@ -156,11 +156,11 @@ export default class MeditationPage extends Component {
               // onPress={() => this.isMeditationTime ? this.props.navigation.navigate('MeditatorPage') : Alert.alert('Not Available', 'Meditation is only available from 6-9 AM and 6-9 PM.')}
               onPress={() => {
                 if (this.state.isMeditationTime) {
-                  this.props.navigation.navigate(this.state.userType==="Meditator"?'MeditatorPage':'InstructorLobby');
+                  this.props.navigation.navigate(this.state.userType==="Meditator"?'MeditatorPage':'InstructorPage');
                 } else {
                   Toast.show({
                     type: 'info', 
-                    text1: 'Not Available',
+                    text1: 'Not Available now',
                     text2: 'Only available from 6-9 AM and 6-9 PM.',
                     position: 'bottom', 
                     visibilityTime: 5000,
@@ -186,13 +186,14 @@ export default class MeditationPage extends Component {
               <Text style={styles.meditationCardText}>MeditatorPage/Triyadhyanam</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.meditationCard}
-              onPress={() =>  this.props.navigation.navigate('MeditatorPage') }
+              onPress={() =>{console.log(this.state.userType),this.props.navigation.navigate(this.state.userType==="Meditator"?'MeditatorPage':'InstructorPage')}}
+
             >
               <Image source={{ uri: 'https://srivedamaayu.com/wp-content/uploads/2016/11/meditation.jpg' }} style={styles.cardImage} />
               <Text style={styles.meditationCardText}>MeditatorPage/Triyadhyanam</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               style={styles.meditationCard}

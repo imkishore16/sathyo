@@ -41,7 +41,7 @@ export default function MeditatorPage({ navigation }) {
   };
 
   useEffect(() => {
-    // if (chatRequestId) {
+    if (chatRequestId) {
       console.log("use effect called")
       const chatRequestRef = doc(db, 'chatRequests', chatRequestId);
 
@@ -54,7 +54,7 @@ export default function MeditatorPage({ navigation }) {
       });
 
       return () => unsubscribe();
-    // }
+    }
   }, [chatRequestId]);
 
   // useEffect(() => {

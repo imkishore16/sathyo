@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, StyleSheet, StatusBar, Image, ScrollView, Tou
 import { TextInput } from 'react-native-gesture-handler';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../firebase'; // Adjust the path as needed
-import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
+import { collection, addDoc,updateDoc } from 'firebase/firestore'; // Import Firestore functions
 import { Picker } from '@react-native-picker/picker';
 
 const Top = StatusBar.currentHeight;

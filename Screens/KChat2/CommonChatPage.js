@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { doc, updateDoc, onSnapshot, arrayRemove } from 'firebase/firestore';
+import { doc, updateDoc, onSnapshot, arrayRemove,getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase'; // Ensure firebase is correctly set up
 
 const CommonChatPage = ({ route, navigation }) => {
@@ -114,7 +114,8 @@ const CommonChatPage = ({ route, navigation }) => {
     const messageToSend = { text: message, timestamp: new Date() };
 
     try {
-      if (userType === 'Instructor') {
+      // if (userType === 'Instructor') {
+      if (true) {
         // Update instructorMessages in the chat room document
         await updateDoc(chatRoomRef, {
           instructorMessages: [...(chatRoomData?.instructorMessages || []), messageToSend],
@@ -155,6 +156,11 @@ const CommonChatPage = ({ route, navigation }) => {
   }
   
   const handleLaterButton = async () => {
+    setMessage("I will join later")
+    sendMessage()
+  //   setTimeout(() => {
+      
+  // }, 2000);
     try {
       const email = auth.currentUser.email;
       const chatRoomRef = doc(db, 'ChatRooms', chatRoomId); 

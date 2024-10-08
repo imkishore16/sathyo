@@ -5,7 +5,7 @@ import { getFirestore, getDocs, collection } from 'firebase/firestore';
 import { Alert } from 'react-native';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { requestStoragePermission } from '../Utils/utilFunctions';
 
 export default class MeditationPage extends Component {
   constructor(props) {
@@ -25,13 +25,13 @@ export default class MeditationPage extends Component {
   }
 
   async componentDidMount() {
+    // requestStoragePermission()
     this.fetchFeeds();
     this.fetchUserType();
     this._focusListener = this.props.navigation.addListener('focus', () => {
       this.setState({ modalVisible: false, durationModalVisible: false });
     });
     this.checkMeditationTime();
-    
   }
 
   componentWillUnmount() {

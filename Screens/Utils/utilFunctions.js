@@ -1,5 +1,5 @@
 import { PermissionsAndroid } from 'react-native';
-import { doc, onSnapshot, updateDoc, arrayUnion,deleteDoc } from 'firebase/firestore';
+
 import { doc, onSnapshot, updateDoc, arrayUnion,deleteDoc } from 'firebase/firestore';
 import { auth, db  } from "../../firebase";
 

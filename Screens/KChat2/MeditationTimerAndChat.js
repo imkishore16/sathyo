@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image, StyleSheet, TextInput } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Audio } from 'expo-av';
-import { doc, onSnapshot, updateDoc, arrayUnion,deleteDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, arrayUnion,deleteDoc ,getDoc} from 'firebase/firestore';
 import { auth, db  } from "../../firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BackHandler, Alert } from 'react-native';

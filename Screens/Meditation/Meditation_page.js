@@ -73,7 +73,7 @@ export default class MeditationPage extends Component {
       const dhyanamTitles = dhyanamQuery.docs.map(doc => ({
         id: doc.id,
         title: doc.data().title,
-        time: doc.data().time, // Assuming 'time' field exists
+        time: doc.data().time, 
         music:doc.data().music_Link
       }));
 

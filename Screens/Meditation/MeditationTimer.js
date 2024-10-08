@@ -10,13 +10,15 @@ export default class MeditationTimer extends Component {
   constructor(props) {
     super(props);
     const durationInMinutes = props.route.params?.duration || 0; // Duration in minutes
-    const sound = props.route.params?.song || null
+    console.log(props.route.params)
+    const selectedSong = props.route.params?.selectedSong || null;
     this.state = {
+      selected:selectedSong,
       duration: durationInMinutes * 60, 
       timeLeft: durationInMinutes * 60, 
       isPlaying: true, // Control for timer and audio
       elapsedTime: 0,  // To track elapsed time
-      sound: null,
+      sound: selectedSong,
       songPath:null
     };
   }
@@ -41,10 +43,12 @@ export default class MeditationTimer extends Component {
 
   playSound = async () => {
     console.log('Loading Sound');
-    if(sound!=null)
-        return
+    console.log(this.state.selected);
+    
     const { sound } = await Audio.Sound.createAsync(
-      require('../../assets/Hello.mp3') // TODO : fetch from database based on timer length
+      { uri: this.state.selected },
+      { shouldPlay: true, isLooping: true }
+      
     );
     this.setState({ sound });
 

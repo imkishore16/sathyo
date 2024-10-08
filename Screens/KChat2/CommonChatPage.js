@@ -91,7 +91,7 @@ const CommonChatPage = ({ route, navigation }) => {
           });
         }
 
-        if(!data.meditatorEmails.length==0)
+        if(data.meditatorEmails.length==0)
         {
           navigation.navigate("Home")
         }
@@ -149,7 +149,10 @@ const CommonChatPage = ({ route, navigation }) => {
     }
   };
 
-  const handleWaitButton = () => console.log('Meditator Button 2 pressed');
+  const handleWaitButton = () => {
+    setMessage("Wait a bit")
+    sendMessage()
+  }
   
   const handleLaterButton = async () => {
     try {
@@ -161,7 +164,7 @@ const CommonChatPage = ({ route, navigation }) => {
       });
 
       console.log('User removed from chat room.');
-      navigation.navigate('Home'); 
+      // navigation.navigate('Home'); 
     } catch (error) {
       console.error('Error removing user from chat room: ', error);
     }

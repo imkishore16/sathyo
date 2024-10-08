@@ -187,7 +187,7 @@ export default class MeditationPage extends Component {
               }}
             >
               <Image source={{ uri: 'https://srivedamaayu.com/wp-content/uploads/2016/11/meditation.jpg' }} style={styles.cardImage} />
-              <Text style={styles.meditationCardText}>MeditatorPage/Triyadhyanam</Text>
+              <Text style={styles.meditationCardText}>Triyadhyanam</Text>
             </TouchableOpacity>
 
             {/* <TouchableOpacity

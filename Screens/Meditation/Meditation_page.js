@@ -113,9 +113,13 @@ export default class MeditationPage extends Component {
   };
 
   checkMeditationTime = () => {
+    const currentHour = new Date().getHours();
+    this.setIsMeditationTime((currentHour >= 6 && currentHour < 9) || (currentHour >= 18 && currentHour < 21));
+    console.log(currentHour)
   this.intervalId = setInterval(() => {
       const currentHour = new Date().getHours();
       this.setIsMeditationTime((currentHour >= 6 && currentHour < 9) || (currentHour >= 18 && currentHour < 21));
+      console.log(currentHour);
   }, 60000); // Check every minute
 };
 

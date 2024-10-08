@@ -15,7 +15,9 @@ export default function MeditatorPage({ navigation }) {
     setLoading(true);
     
     try {
+      console.log(1)
       const roomId = await findExisitingRooms(auth.currentUser.email);
+      console.log("2")
       if(roomId==null)
       {
         const requestId = await sendChatRequest(auth.currentUser.email); 

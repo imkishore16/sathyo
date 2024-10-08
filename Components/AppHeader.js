@@ -253,7 +253,7 @@ export default function AppHeader({ navigation }) {
     });
 
     return (
-        <View style={[styles.container, { marginTop: 40 }]}>
+        <View style={[styles.container]}>
             <Image
                 style={styles.backImage}
                 source={{ uri: 'https://res.cloudinary.com/dkkkl3td3/image/upload/v1722829874/vayqnwazm9xtrmffrkqp.png' }}

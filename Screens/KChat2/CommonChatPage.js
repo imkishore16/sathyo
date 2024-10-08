@@ -51,7 +51,9 @@ const CommonChatPage = ({ route, navigation }) => {
           const trimmedEmail = email.split('.com')[0];
           flag = flag && (data[trimmedEmail]?.com === true);
         });
+        
 
+        
         setIsMeditationStartEnabled(flag);
       } else {
         // If no chat room data, show no messages
@@ -89,6 +91,10 @@ const CommonChatPage = ({ route, navigation }) => {
           });
         }
 
+        if(!data.meditatorEmails.length==0)
+        {
+          navigation.navigate("Home")
+        }
         
 
         setIsMeditationStartEnabled(flag);

@@ -266,32 +266,7 @@ export default function AppHeader({ navigation }) {
 
             {menuVisible && (
                 <View style={styles.dropdownContainer}>
-                    {/* {userType === "Meditator" && (
-                        <TouchableOpacity
-                            style={[styles.dropdownItem, { opacity: isMeditationTime ? 1 : 0.5 }]} // Disable button visually
-                            onPress={() => isMeditationTime ? navigateTo('Meditation_page') : Alert.alert('Not Available', 'Meditation is only available from 6-9 AM and 6-9 PM.')}
-                            disabled={!isMeditationTime} // Disable touch interaction if not the right time
-                        >
-                            <Text style={styles.dropdownText}>Meditation</Text>
-                        </TouchableOpacity>
-                    )}
-                    {userType === "Instructor" && (
-                        <>
-                            <TouchableOpacity
-                                style={[styles.dropdownItem, { opacity: isMeditationTime ? 1 : 0.5 }]}
-                                onPress={() => isMeditationTime ? navigateTo('InstructorPage') : Alert.alert('Not Available', 'Meditation is only available from 6-9 AM and 6-9 PM.')}
-                                disabled={!isMeditationTime}
-                            >
-                                <Text style={styles.dropdownText}>Meditation</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.dropdownItem}
-                                onPress={() => navigateTo('UploadMp3')}
-                            >
-                                <Text style={styles.dropdownText}>Upload songs</Text>
-                            </TouchableOpacity> 
-                        </>
-                    )} */}
+
                     <TouchableOpacity style={styles.dropdownItem} onPress={() => navigateTo('Meditation_page')}>
                         <Text style={styles.dropdownText}>Meditation</Text>
                     </TouchableOpacity>

@@ -27,7 +27,7 @@ export async function requestStoragePermission() {
 }
 
 
-export const deleteChatRoom = async () => {
+export const deleteChatRoom = async (chatRoomId) => {
   if (chatRoomId) {
     const chatRoomRef = doc(db, 'ChatRooms', chatRoomId);
 
@@ -40,3 +40,4 @@ export const deleteChatRoom = async () => {
     }
   }
 };
+

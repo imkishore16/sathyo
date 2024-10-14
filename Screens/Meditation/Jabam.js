@@ -36,14 +36,16 @@ export default class Jabam extends Component {
     }
   };
 
-  setModalVisible = (visible, uri = '') => {
+  setModalVisible = (visible, uri = '',time) => {
     this.setState({ modalVisible: visible, modalUri: uri });
     if (visible && uri) {
-      this.incrementUserPerformance(); // ++ song count if song played
+      let value;
+      // if(uri==="")
+      this.incrementUserPerformance(time); // ++ song count if song played
     }
   };
 
-  incrementUserPerformance = async () => {
+  incrementUserPerformance = async (time) => {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -63,7 +65,7 @@ export default class Jabam extends Component {
           // Increment the performance field by 1
           const currentPerformance = userDoc.data().performance || 0;
           await updateDoc(userDocRef, {
-            performance: currentPerformance + 1,
+            performance: currentPerformance + parseInt(time),
           });
           console.log('Performance updated successfully');
         } else {
@@ -109,13 +111,13 @@ export default class Jabam extends Component {
                 <View key={feed.id} style={styles.cardContainer}>
                   <TouchableOpacity
                     title="Play Audiomack"
-                    onPress={() => this.setModalVisible(true, feed.music_Link)}
+                    onPress={() => this.setModalVisible(true, feed.music_Link,feed.time)}
                   >
                     <Jabam_Card title={feed.title} image={feed.image_link} time={feed.time} />
                   </TouchableOpacity>
                 </View>
               ))}
-            </ScrollView>
+            </ScrollView> 
 
             {/* WebView Modal */}
             <Modal

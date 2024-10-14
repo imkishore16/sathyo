@@ -108,12 +108,6 @@ export default function AppStack() {
             />
             
             
-            
-            
-            
-            
-            
-            
             <Stack.Screen
                 name="MeditatorPage"
                 options={{ headerShown: false }}

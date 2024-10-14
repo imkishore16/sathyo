@@ -6,15 +6,25 @@ import { ChatProvider } from './Screens/KChat2/ChatContext';
 import AppStack from './Screens/Router/AppStack';
 import NotificationListener from './Screens/KChat2/NotificationListener';
 import Toast from 'react-native-toast-message';
+import { ChatRoomProvider } from './Screens/KChat2/ChatRoomProvider';
 
 export default function App() {
   return (
+    // <NavigationContainer>
+    //   <ChatProvider >
+    //       <AppStack/>
+    //       <NotificationListener /> 
+    //     </ChatProvider>
+    //     <Toast />
+    // </NavigationContainer>
     <NavigationContainer>
-      <ChatProvider >
-          <AppStack/>
+      <ChatProvider>
+        <ChatRoomProvider>
+          <AppStack />
           <NotificationListener /> 
-        </ChatProvider>
-        <Toast />
+        </ChatRoomProvider>
+      </ChatProvider>
+      <Toast />
     </NavigationContainer>
   );
 }

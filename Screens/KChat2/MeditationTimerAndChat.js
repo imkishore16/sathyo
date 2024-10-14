@@ -162,6 +162,9 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
           const chatRoomRef = doc(db, 'ChatRooms', chatRoomId);
           await deleteDoc(chatRoomRef); // Deleting the chat room
           console.log('Chat room deleted');
+          const chatRequestRef = doc(db, 'chatRequest', chatRoomId);
+          await deleteDoc(chatRequestRef); // Deleting the chat room
+          console.log('Chat request deleted');
         } catch (error) {
           console.error('Error deleting chat room:', error);
         }

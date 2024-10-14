@@ -36,7 +36,9 @@ const ChatRoomListener = () => {
           if (!snapshot.empty) {
             const data = snapshot.docs[0].data();
             setCurrentChatRoom(data);
+            console.log("Chatroomprovidedr : ",data)
             // navigation.navigate("ChatRoom", { chatRoomId: snapshot.docs[0].id });
+            navigation.navigate('CommonChatPage' , {chatRoomId: data.id});
           } else {
             setCurrentChatRoom(null); 
           }

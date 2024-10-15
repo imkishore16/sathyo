@@ -189,15 +189,16 @@ export default class MeditationPage extends Component {
               <Image source={{ uri: 'https://srivedamaayu.com/wp-content/uploads/2016/11/meditation.jpg' }} style={styles.cardImage} />
               <Text style={styles.meditationCardText}>Triyadhyanam</Text>
             </TouchableOpacity>
+            
 
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={styles.meditationCard}
               onPress={() =>{console.log(this.state.userType),this.props.navigation.navigate(this.state.userType==="Meditator"?'MeditatorPage':'InstructorPage')}}
 
             >
               <Image source={{ uri: 'https://srivedamaayu.com/wp-content/uploads/2016/11/meditation.jpg' }} style={styles.cardImage} />
               <Text style={styles.meditationCardText}>MeditatorPage/Triyadhyanam</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.meditationCard}

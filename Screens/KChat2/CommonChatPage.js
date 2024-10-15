@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { doc, updateDoc, onSnapshot, arrayRemove,getDoc } from 'firebase/firestore';
+import { doc, updateDoc, onSnapshot, arrayRemove,getDoc ,collection,query} from 'firebase/firestore';
 import { auth, db } from '../../firebase'; // Ensure firebase is correctly set up
 import { useFocusEffect } from '@react-navigation/native';
+import { BackHandler, Alert } from 'react-native';
 
 
 const CommonChatPage = ({ route, navigation }) => {

@@ -51,6 +51,8 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
       return () => backHandler.remove();
     }, [])
   );
+
+  
   const updateAvailability = async () => {
     const instructorsRef = collection(db, 'Users');
     const q = query(

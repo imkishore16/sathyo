@@ -3,6 +3,8 @@ import { View, Text, TextInput, Button, TouchableOpacity, FlatList, StyleSheet }
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, updateDoc, onSnapshot, arrayRemove,getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase'; // Ensure firebase is correctly set up
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const CommonChatPage = ({ route, navigation }) => {
   const chatRoomId = route.params?.chatRoomId || "";
@@ -12,6 +14,29 @@ const CommonChatPage = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [chatRoomData, setChatRoomData] = useState(null);
   const [isMeditationStartEnabled, setIsMeditationStartEnabled] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        Alert.alert(
+          'Exit Chat Room',
+          'Please click I\'ll joion later to leave Chatroom',
+          [{ text: 'OK', onPress: () => {}, style: 'cancel' }],
+          { cancelable: true }
+        );
+        return true; 
+      };
+
+      // event listener for hardware back button
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => backHandler.remove();
+    }, [])
+  );
+
 
   const updateAvailability = async () => {
     const instructorsRef = collection(db, 'Users');
@@ -40,7 +65,7 @@ const CommonChatPage = ({ route, navigation }) => {
     const userTypeStored = await AsyncStorage.getItem('userType');
     setUserType(userTypeStored);
   };
-  
+
   useEffect(() => {
     updateAvailability();
 

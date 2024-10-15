@@ -51,7 +51,30 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
       return () => backHandler.remove();
     }, [])
   );
+  const updateAvailability = async () => {
+    const instructorsRef = collection(db, 'Users');
+    const q = query(
+      instructorsRef,
+      where('email', '==', auth.currentUser.email),
+      where('userType','==','Instructor')
+    );
+    const querySnapshot = await getDocs(q);
   
+    if (querySnapshot.empty) {
+      console.log('No user found.');
+      return null;
+    }
+  
+    const docSnapshot = querySnapshot.docs[0];
+    const userDocRef = doc(db, 'Users', docSnapshot.id);
+  
+    await updateDoc(userDocRef, {
+      availability: true
+    });
+  
+    console.log(`Updated availability to false for user: ${auth.currentUser.email}`);
+  };
+
   const updateTriDuration = async (duration) => {
     try {
       const currentUserEmail = auth.currentUser?.email;
@@ -165,6 +188,7 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
           const chatRequestRef = doc(db, 'chatRequest', chatRoomId);
           await deleteDoc(chatRequestRef); // Deleting the chat room
           console.log('Chat request deleted');
+          await updateAvailability();
         } catch (error) {
           console.error('Error deleting chat room:', error);
         }

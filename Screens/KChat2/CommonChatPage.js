@@ -13,11 +13,37 @@ const CommonChatPage = ({ route, navigation }) => {
   const [chatRoomData, setChatRoomData] = useState(null);
   const [isMeditationStartEnabled, setIsMeditationStartEnabled] = useState(false);
 
+  const updateAvailability = async () => {
+    const instructorsRef = collection(db, 'Users');
+    const q = query(
+      instructorsRef,
+      where('email', '==', auth.currentUser.email),
+      where('userType','==','Instructor')
+    );
+    const querySnapshot = await getDocs(q);
+  
+    if (querySnapshot.empty) {
+      console.log('No user found.');
+      return null;
+    }
+  
+    const docSnapshot = querySnapshot.docs[0];
+    const userDocRef = doc(db, 'Users', docSnapshot.id);
+  
+    await updateDoc(userDocRef, {
+      availability: false
+    });
+  
+    console.log(`Updated availability to false for user: ${auth.currentUser.email}`);
+  };
+  const getUserType = async () => {
+    const userTypeStored = await AsyncStorage.getItem('userType');
+    setUserType(userTypeStored);
+  };
+  
   useEffect(() => {
-    const getUserType = async () => {
-      const userTypeStored = await AsyncStorage.getItem('userType');
-      setUserType(userTypeStored);
-    };
+    updateAvailability();
+
     getUserType();
 
     const chatRoomRef = doc(db, 'ChatRooms', chatRoomId);

@@ -13,10 +13,8 @@ export default function App() {
 
     <NavigationContainer>
         <ChatProvider>
-      <ChatRoomProvider>
           <AppStack />
           <NotificationListener /> 
-      </ChatRoomProvider> 
         </ChatProvider>
       <Toast/>
     </NavigationContainer>

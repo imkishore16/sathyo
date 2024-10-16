@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image, StyleSheet, TextInput } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Audio } from 'expo-av';
-import { doc, onSnapshot, updateDoc, arrayUnion,deleteDoc ,getDoc} from 'firebase/firestore';
+import { query ,where,doc, onSnapshot, updateDoc, arrayUnion,deleteDoc ,getDoc, getDocs, collection } from 'firebase/firestore';
 import { auth, db  } from "../../firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BackHandler, Alert } from 'react-native';
@@ -52,7 +52,7 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
     }, [])
   );
 
-  
+
   const updateAvailability = async () => {
     const instructorsRef = collection(db, 'Users');
     const q = query(
@@ -84,27 +84,28 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
         throw new Error('No authenticated user found');
       }
   
-      const userDocRef = doc(db, 'Users', currentUserEmail);
+      const usersRef = collection(db, 'Users');
+      const q = query(usersRef, where('email', '==', currentUserEmail));
+      const querySnapshot = await getDocs(q);
   
-      const userDoc = await getDoc(userDocRef);
-      if (!userDoc.exists()) {
+      if (querySnapshot.empty) {
         console.log('No user found with this email');
         return;
       }
   
-      const userData = userDoc.data();
-  
-      const currentTri = userData.tri || 0;
-  
-      await updateDoc(userDocRef, {
-        tri: currentTri + duration,
+      querySnapshot.forEach(async (doc) => {
+        const userDocRef = doc.ref;
+        const userData = doc.data();
+        const currentTri = userData.tri || 0;
+        await updateDoc(userDocRef, {
+          tri: currentTri + duration,
+        });
+        console.log(`Updated user: ${currentUserEmail} with new tri value: ${currentTri + duration}`);
       });
-  
-      console.log(`Updated user: ${currentUserEmail} with new tri value: ${currentTri + duration}`);
     } catch (error) {
       console.error('Error updating user tri:', error);
     }
-  };
+  }  
 
 
   useEffect(() => {
@@ -185,10 +186,14 @@ const MeditationTimerAndChat = ({ route, navigation }) => {
       if (chatRoomId) {
         try {
           const chatRoomRef = doc(db, 'ChatRooms', chatRoomId);
-          await deleteDoc(chatRoomRef); // Deleting the chat room
+          if(!chatRoomRef.empty)
+            await deleteDoc(chatRoomRef); // Deleting the chat room
           console.log('Chat room deleted');
+
+
           const chatRequestRef = doc(db, 'chatRequest', chatRoomId);
-          await deleteDoc(chatRequestRef); // Deleting the chat room
+          if(!chatRequestRef.empty)
+            await deleteDoc(chatRequestRef); // Deleting the chat room
           console.log('Chat request deleted');
           await updateAvailability();
         } catch (error) {

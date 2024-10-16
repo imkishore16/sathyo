@@ -1,102 +1,3 @@
-// import React, { Component } from 'react';
-// import { View, Text, SafeAreaView, StyleSheet, StatusBar, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
-// import { TextInput } from 'react-native-gesture-handler';
-// import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
-// import { db, auth } from '../../firebase'; // Import your Firebase auth instance
-// import { collection, query, where, getDocs } from 'firebase/firestore';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// const Top = StatusBar.currentHeight;
-
-// export default class Login extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       email: '',
-//       password: '',
-//     };
-//   }
-
-//   componentDidMount() {
-//     // Check if the user is already signed in
-//     onAuthStateChanged(auth, async (user) => {
-//       if (user) {
-//         const email = user.email;
-        
-//         try {
-//           const userType = await this.getUserTypeByEmail(email);
-//           await this.storeUserType(userType);
-  
-//           this.props.navigation.navigate('Home');
-//         } catch (error) {
-//           console.error("Error fetching user type or storing it:", error);
-//         }
-//       }
-//     });
-//   }
-
-//   storeUserType = async (userType) => {
-//     try {
-//       await AsyncStorage.setItem('userType', userType);
-//     } catch (error) {
-//       console.error('Error saving userType:', error);
-//     }
-//   };
-
-//   getUserTypeByEmail = async (email) => {
-//     try {
-//       const usersRef = collection(db, 'Users');
-//       const q = query(usersRef, where('email', '==', email));
-//       const querySnapshot = await getDocs(q);
-//       if (!querySnapshot.empty) {
-//         const userDoc = querySnapshot.docs[0];
-//         const userType = userDoc.data().userType;
-//         return userType;
-//       } else {
-//         throw new Error('No user found with the given email.');
-//       }
-//     } catch (error) {
-//       console.error('Error getting user type:', error);
-//       throw error;
-//     }
-//   };
-
-//   handleLogin = async () => {
-//     const { email, password } = this.state;
-
-//     try {
-//       await signInWithEmailAndPassword(auth, email, password);
-//       const userType = await this.getUserTypeByEmail(email);
-//       console.log("getUserTypeByEmail ",userType)
-//       await this.storeUserType(userType);
-
-//       console.log('User type set as:', userType);
-//       Alert.alert('Login successful!');
-
-//       this.props.navigation.navigate('Home');
-//     } catch (error) {
-//       if (error.code === 'auth/invalid-credential') {
-//         Alert.alert('Something Wrong', 'Please check your credentials');
-//       } else if (error.code === 'auth/wrong-password') {
-//         Alert.alert('Incorrect password', 'The password is invalid for the email.');
-//       } else {
-//         Alert.alert('Error', error.message);
-//       }
-//     }
-//   };
-
-//   handleLogout = () => {
-//     signOut(auth)
-//       .then(() => {
-//         Alert.alert('Signed out successfully!');
-//         this.props.navigation.navigate('Login'); 
-//       })
-//       .catch((error) => {
-//         Alert.alert('Error signing out', error.message);
-//         console.error(error);
-//       });
-//   };
-
 import React, { Component } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, StatusBar, Image, ScrollView, TouchableOpacity, Alert, AppState } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -114,6 +15,7 @@ export default class Login extends Component {
       email: '',
       password: '',
       appState: AppState.currentState,
+      ispasswordvisible:true
     };
   }
 
@@ -139,7 +41,6 @@ export default class Login extends Component {
   }
 
   componentWillUnmount() {
-    // Remove the auth listener and app state listener
     if (this.authListener) {
       this.authListener();
     }
@@ -190,7 +91,7 @@ export default class Login extends Component {
       availability: isAvailable
     });
 
-    console.log(`Updated availability to ${isAvailable} for user: ${auth.currentUser.email}`);
+    console.log("Updated availability to ${isAvailable} for user: ${auth.currentUser.email}");
   };
 
   getUserTypeByEmail = async (email) => {
@@ -278,14 +179,16 @@ export default class Login extends Component {
                 onChangeText={(email) => this.setState({ email })}
                 value={this.state.email}
               />
+
               <TextInput
                 placeholder='Password'
                 placeholderTextColor={"#858585"}
                 style={styles.Input_Box}
-                secureTextEntry
+                secureTextEntry={this.state.ispasswordvisible}
                 onChangeText={(password) => this.setState({ password })}
                 value={this.state.password}
               />
+              <TouchableOpacity onPress={() => this.setState({ ispasswordvisible: !this.state.ispasswordvisible })}>
               <Image
                 style={{
                   width: 27,
@@ -294,9 +197,13 @@ export default class Login extends Component {
                   marginTop: -40,
                 }}
                 source={{
-                  uri: "https://res.cloudinary.com/dxhmtgtpg/image/upload/v1681360562/Group254_uq1yhe.png",
+                  uri: this.state.ispasswordvisible
+                    ? "https://res.cloudinary.com/dxhmtgtpg/image/upload/v1681360562/Group254_uq1yhe.png" // eye icon
+                    : "https://res.cloudinary.com/dxhmtgtpg/image/upload/v1681360562/Group254_uq1yhe.png", // eye-slash icon
                 }}
               />
+            </TouchableOpacity>
+
               <TouchableOpacity onPress={() => { this.props.navigation.navigate("Forget_Password") }}>
                 <Text style={styles.Trouble_SignIn}>Having trouble in sign in?</Text>
               </TouchableOpacity>
@@ -406,7 +313,6 @@ const styles = StyleSheet.create({
   Signup_Navigation: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '6%',
-  }
+    marginTop: '6%',
+  }
 });
-

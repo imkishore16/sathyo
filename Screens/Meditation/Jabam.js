@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getFirestore, getDocs, collection, query, where, updateDoc } from 'firebase/firestore';
 
 import Jabam_Card from '../../Components/Jabam_Card';
-import { getAuth } from 'firebase/auth';
+import {auth,db} from "../../firebase"
 
 export default class Jabam extends Component {
   constructor(props) {
@@ -47,7 +47,6 @@ export default class Jabam extends Component {
 
   incrementUserPerformance = async (time) => {
     try {
-      const auth = getAuth();
       const user = auth.currentUser;
 
       if (user) {

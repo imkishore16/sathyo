@@ -81,10 +81,6 @@ export default function MeditatorPage({ navigation }) {
     return () => unsubscribe(); 
   };
 
-
-
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Meditator Page</Text>

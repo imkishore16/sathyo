@@ -17,7 +17,7 @@ export default function MeditatorPage({ navigation }) {
     try {
       console.log("finding existing chatroom",1)
       const email=await auth.currentUser.email
-      const roomId = await findExisitingRooms(email);
+      const roomId = await findExisitingRooms();
       console.log(roomId)
       if(roomId==null)
       {
@@ -27,14 +27,15 @@ export default function MeditatorPage({ navigation }) {
       }
       else{
         //TODO : navigate , write snapshot to navigate to the lobby , or will the sanpshot from other component work? , need to check
-        setChatRoomId(roomId)
-        const chatRequestRef = doc(db, 'chatRequests', roomId);
-
+        const chatRequestRef = await doc(db, 'chatRequests', roomId);
+        
         await updateDoc(chatRequestRef, {
           meditatorEmail:email,
           status: 'pending',
           timestamp: serverTimestamp(),
         });
+        setChatRoomId(roomId)
+        setChatRequestId(roomId)
       }
     } catch (error) {
       console.log(error)
@@ -58,13 +59,8 @@ export default function MeditatorPage({ navigation }) {
 
       return () => unsubscribe();
     }
-  }, [chatRequestId]);
+  }, [chatRequestId,chatRoomId]);
 
-  // useEffect(() => {
-  //   if (chatRoomId) {
-  //     listenForChatRoomCreation(chatRoomId);
-  //   }
-  // }, [chatRoomId]);
 
   const listenForChatRoomCreation = (chatRequestId) => {
     console.log("listenForChatRoomCreation called")
@@ -74,7 +70,7 @@ export default function MeditatorPage({ navigation }) {
       console.log("ChatRooms updated");
 
       const chatRoomData = snapshot.data();
-      if (chatRoomData?.status === 'created'  && chatRoomData?.meditatorEmails.includes(auth.currentUser.email)) {
+      if (chatRoomData?.status === "created"  && chatRoomData?.meditatorEmails.includes(auth.currentUser.email)) {
         navigation.navigate('CommonChatPage' , {chatRoomId: chatRequestId});
         setLoading(false);
       } else {
@@ -84,6 +80,10 @@ export default function MeditatorPage({ navigation }) {
   
     return () => unsubscribe(); 
   };
+
+
+
+
 
   return (
     <View style={styles.container}>

@@ -10,6 +10,7 @@ const InstructorResponseModal = ({ chatRequestId, instructorEmail, meditatorEmai
   const handleAccept = async () => {
     await handleInstructorResponse(chatRequestId, true, navigation); 
     setModalVisible(false); 
+    console.log("navigating to common chat page for instrucotr")
     navigation.navigate('CommonChatPage', { chatRoomId: chatRequestId });
     onClose();
   };

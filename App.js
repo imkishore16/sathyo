@@ -10,23 +10,18 @@ import { ChatRoomProvider } from './Screens/KChat2/ChatRoomProvider';
 
 export default function App() {
   return (
-    // <NavigationContainer>
-    //   <ChatProvider >
-    //       <AppStack/>
-    //       <NotificationListener /> 
-    //     </ChatProvider>
-    //     <Toast />
-    // </NavigationContainer>
+
     <NavigationContainer>
-      {/* <ChatRoomProvider> */}
         <ChatProvider>
+      <ChatRoomProvider>
           <AppStack />
           <NotificationListener /> 
+      </ChatRoomProvider> 
         </ChatProvider>
-      {/* </ChatRoomProvider> */}
-      {/* <Toast/> */}
+      <Toast/>
     </NavigationContainer>
   );
+
 }
 
 const styles = StyleSheet.create({

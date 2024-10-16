@@ -7,21 +7,18 @@ import 'react-native-get-random-values';
 export async function findExisitingRooms() {
   try {
     console.log("trying to find exsiting rooms")
-    // const meditatorEmail = auth.currentUser?.email;  
 
-    const existingChatRoomQuery = query(
+    const existingChatRoomQuery = await query(
       collection(db, 'ChatRooms'),
       where('status', '==', 'created'),
       where('meditatorsCount', '<', 2)
     );
-    console.log(1)
 
     const existingChatRoomsSnapshot = await getDocs(existingChatRoomQuery);
-    console.log(2)
 
     if (!existingChatRoomsSnapshot.empty) {
       const chatRoomDoc = existingChatRoomsSnapshot.docs[0];
-      const chatRoomRequestRef = doc(db, 'ChatRooms', chatRoomDoc.id);
+      const chatRoomRequestRef = await doc(db, 'ChatRooms', chatRoomDoc.id);
 
       console.log('Existing chat room found and updated:', chatRoomDoc.id);
       return chatRoomDoc.id;

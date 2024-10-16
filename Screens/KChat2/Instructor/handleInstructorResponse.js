@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export async function handleInstructorResponse(chatRequestId, accepted,navigation) {
   console.log("handle Instructor Response is called")
+  console.log(chatRequestId)
   const chatRequestRef = doc(db, 'chatRequests', chatRequestId);
   const chatRequestDoc = await getDoc(chatRequestRef);
   // const navigation = useNavigation();
@@ -47,7 +48,7 @@ export async function handleInstructorResponse(chatRequestId, accepted,navigatio
     await updateDoc(chatRequestRef, { status: 'accepted' });
     
     
-    console.log('Navigating to Meditation Lobby for', instructorEmail, meditatorEmail);
+    console.log('Navigating to commonchat page for', instructorEmail, meditatorEmail);
     console.log("Chat room created with status created")
 
   } else {

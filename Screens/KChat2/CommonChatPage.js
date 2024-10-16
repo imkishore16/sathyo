@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { doc, updateDoc, onSnapshot, arrayRemove,getDoc ,collection,query} from 'firebase/firestore';
+import { doc, updateDoc, onSnapshot, arrayRemove,getDocs ,collection,query,where} from 'firebase/firestore';
 import { auth, db } from '../../firebase'; // Ensure firebase is correctly set up
 import { useFocusEffect } from '@react-navigation/native';
 import { BackHandler, Alert } from 'react-native';
@@ -16,27 +16,27 @@ const CommonChatPage = ({ route, navigation }) => {
   const [chatRoomData, setChatRoomData] = useState(null);
   const [isMeditationStartEnabled, setIsMeditationStartEnabled] = useState(false);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        Alert.alert(
-          'Exit Chat Room',
-          'Please click I\'ll joion later to leave Chatroom',
-          [{ text: 'OK', onPress: () => {}, style: 'cancel' }],
-          { cancelable: true }
-        );
-        return true; 
-      };
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       Alert.alert(
+  //         'Exit Chat Room',
+  //         'Please click I\'ll joion later to leave Chatroom',
+  //         [{ text: 'OK', onPress: () => {}, style: 'cancel' }],
+  //         { cancelable: true }
+  //       );
+  //       return true; 
+  //     };
 
-      // event listener for hardware back button
-      const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        onBackPress
-      );
+  //     // event listener for hardware back button
+  //     const backHandler = BackHandler.addEventListener(
+  //       'hardwareBackPress',
+  //       onBackPress
+  //     );
 
-      return () => backHandler.remove();
-    }, [])
-  );
+  //     return () => backHandler.remove();
+  //   }, [])
+  // );
 
 
   const updateAvailability = async () => {
@@ -67,9 +67,8 @@ const CommonChatPage = ({ route, navigation }) => {
     setUserType(userTypeStored);
   };
 
+  
   useEffect(() => {
-    updateAvailability();
-
     getUserType();
 
     const chatRoomRef = doc(db, 'ChatRooms', chatRoomId);
@@ -117,6 +116,8 @@ const CommonChatPage = ({ route, navigation }) => {
   }, [chatRoomId, meditatorEmails]);
 
   useEffect(()=>{
+    updateAvailability();
+
     const chatRoomRef = doc(db, 'ChatRooms', chatRoomId);
     const unsubscribe = onSnapshot(chatRoomRef, (docSnapshot) => {
       const data = docSnapshot.data();
@@ -185,7 +186,7 @@ const CommonChatPage = ({ route, navigation }) => {
     navigation.navigate('InstructorLobby', { chatRoomId: chatRoomId });
   }
   
-  const handleThanksButton = () => console.log('Instructor Button 2 pressed');
+  const handleThanksButton = () => console.log('Instructor Button 2 pressed , remove chat rooms and reequest and kick everyone out');
   const handleInstructorButton3 = () => console.log('Instructor Button 3 pressed');
 
   const handleReadyButton = async () => {

@@ -15,12 +15,13 @@ export default function MeditatorPage({ navigation }) {
     setLoading(true);
     
     try {
-      console.log(1)
-      const roomId = await findExisitingRooms(auth.currentUser.email);
-      console.log("2")
+      console.log("finding existing chatroom",1)
+      const email=await auth.currentUser.email
+      const roomId = await findExisitingRooms(email);
+      console.log(roomId)
       if(roomId==null)
       {
-        const requestId = await sendChatRequest(auth.currentUser.email); 
+        const requestId = await sendChatRequest(email); 
         setChatRequestId(requestId);
         console.log("chatrequest id setted" , requestId)
       }
@@ -30,14 +31,14 @@ export default function MeditatorPage({ navigation }) {
         const chatRequestRef = doc(db, 'chatRequests', roomId);
 
         await updateDoc(chatRequestRef, {
-          meditatorEmail:auth.currentUser.email,
+          meditatorEmail:email,
           status: 'pending',
           timestamp: serverTimestamp(),
         });
       }
     } catch (error) {
       console.log(error)
-      Alert.alert('Error', 'Failed to send chat request');
+      Alert.alert('Error', 'Failed to send chat request , Try again in few seconds');
       setLoading(false);
     }
   };

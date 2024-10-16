@@ -18,13 +18,13 @@ export default function App() {
     //     <Toast />
     // </NavigationContainer>
     <NavigationContainer>
-      <ChatProvider>
-        <ChatRoomProvider>
+      {/* <ChatRoomProvider> */}
+        <ChatProvider>
           <AppStack />
           <NotificationListener /> 
-        </ChatRoomProvider>
-      </ChatProvider>
-      <Toast />
+        </ChatProvider>
+      {/* </ChatRoomProvider> */}
+      {/* <Toast/> */}
     </NavigationContainer>
   );
 }

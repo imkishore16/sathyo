@@ -22,6 +22,29 @@ export async function findAvailableInstructor() {
     const instructor = instructorDoc.data();
     const instructorEmail = instructor.email;
 
+    //check if the instrucotr has any pending chatrequests or if a chatRequest is made created
+    const qPending = query(
+      collection(db, 'chatRequests'),
+      where('instructorEmail', '==', instructorEmail),
+      where('status', '==', 'pending')
+    );
+    
+    const qCreated = query(
+      collection(db, 'chatRequests'),
+      where('instructorEmail', '==', instructorEmail),
+      where('status', '==', 'created')
+    );
+    
+    const [snapshotPending, snapshotCreated] = await Promise.all([
+      getDocs(qPending),
+      getDocs(qCreated),
+    ]);
+    
+    if (!snapshotPending.empty || !snapshotCreated.empty) {
+      continue; //skip ins
+    }
+
+
     // Check the blacklist status of the instructor
     const blacklistRef = doc(db, 'TemporaryBlacklist', instructorEmail);
     const blacklistDoc = await getDoc(blacklistRef);

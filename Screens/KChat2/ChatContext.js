@@ -1,17 +1,28 @@
-
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { query, collection, where, onSnapshot } from 'firebase/firestore';
+import { query, collection, where, onSnapshot ,getDocs} from 'firebase/firestore';
 import { db, auth } from '../../firebase'; 
+
 
 const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
   const [chatRequest, setChatRequest] = useState(null);
   
-  const clearChatRequest = () => {
+  const clearChatRequest = async() => {
     setChatRequest(null); 
+    console.log(chatRequest)
+
+    const q = query(
+      collection(db, 'chatRequests'),
+      where('instructorEmail', '==', auth.currentUser.email),
+      where('status', '==', 'pending')
+    );
+    const qRef = await getDocs(q);
+    if(!qRef.empty)
+    {
+      setChatRequest(1); 
+    }
   };
 
   return (
@@ -32,7 +43,9 @@ const ChatListener = () => {
         console.log("User is not authenticated, navigating to Login");
         setChatRequest(null); 
         navigation.navigate("Login");
-      } else {
+      } 
+      else {
+        console.log("Chat context running")
         const q = query(
           collection(db, 'chatRequests'),
           where('instructorEmail', '==', user.email),
@@ -48,16 +61,16 @@ const ChatListener = () => {
           }
         });
 
-        // Cleanup function for the chat requests listener
-        return () => unsubscribeChatRequests();
+        return () => {
+          console.log("unsubcribing")
+          unsubscribeChatRequests()};
       }
     });
 
-    // Cleanup function for the authentication listener
     return () => unsubscribeAuth();
   }, [navigation, setChatRequest]);
 
-  return null; // This component does not render anything
+  return null; 
 };
 
 export const useChatContext = () => {

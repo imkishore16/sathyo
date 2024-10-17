@@ -13,7 +13,12 @@
           "package_name": "com.ryogeshwaran.sathyodhayam"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "696545506494-b6aur363h4akjr5fkj4ghv042u06slr1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyChioETdurzlcx8daYzZrpATpfb_Ow9oWU"
@@ -21,7 +26,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "696545506494-b6aur363h4akjr5fkj4ghv042u06slr1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "696545506494-om4kdr1dr0rtcu2p4llf3pn5fv42c4ig.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ryogeshwaran.sathyodhayam"
+              }
+            }
+          ]
         }
       }
     }
